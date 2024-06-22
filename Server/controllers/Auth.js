@@ -199,7 +199,7 @@ exports.login = async (req,res) => {
         const payload = {
             email:user.email,
             id:user._id,
-            role:user.role,
+            accountType:user.accountType,
         }
         //match the password
         if( await bcrypt.compare(password, user.password)){
@@ -248,3 +248,16 @@ exports.login = async (req,res) => {
 
 
 //Change password
+exports.changePassword = async (req,res) =>{
+    try{
+        //fetch data
+       
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:'Error in changing the password',
+        });
+    }
+}
