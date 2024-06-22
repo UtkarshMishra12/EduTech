@@ -2,6 +2,8 @@ const User = require("../models/User");
 const OTP = require("../models/Otp");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 
 //SendOTP
@@ -44,7 +46,7 @@ exports.sendOTP = async (req,res) =>{
         const otpPayload = {email,otp};
 
         //create an entry in  DB
-        const otpBody = await OTP.create(otpPayload);
+        const otpBody = await OTP.create(otpPayload); //when this will be executed, first a mail will be send to the user as we have written in the OTP Model
         console.log(otpBody);
         
         //return response
@@ -165,13 +167,84 @@ exports.signUp = async (req,res) =>{
     catch(error){
         res.status(500).json({
             success:false,
-            message:"Error in signingUp",
+            message:"Error in signingUp and try again",
         })
     }
-}
+};
 
 
 //Login
+exports.login = async (req,res) => {
+    try{
+        //fetch data
+        const {email,password} = req.body;
+
+        //validation
+        if(!email || !password){
+            res.status(403).json({
+                success:false,
+                message: "Please fill the email and password correctly",
+            });
+        }
+
+        //check for existing user
+        const user = await User.findOne({email});
+        if(!user){
+            res.status(400).json({
+                success:false,
+                message:"User already exist",
+            })
+        }
+
+        const payload = {
+            email:user.email,
+            id:user._id,
+            role:user.role,
+        }
+        //match the password
+        if( await bcrypt.compare(password, user.password)){
+            
+            //generate jwt token after password matching
+            let token = jwt.sign(payload, 
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: "2h",
+                }
+            );
+
+            user = user.toObject();
+            user.token = token;
+            user.password = undefined;
+
+            const options = {
+                expiresIn: new Date( Date.now() + 3* 24 * 60 * 60 * 1000),
+                httpOnly: true,
+            }
+
+            //create cookie and send response
+            res.cookie("token", token, options).status(200).json({
+                success:true,
+                token,
+                user,
+                message:"User logged in Successfully",
+            })
+        }
+        else{
+            //password does not match
+            return res.status(401).json({
+                success:false,
+                message:"Password does not match",
+            });
+        }
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:'Login Failure, please try again',
+        });
+    }
+}
 
 
 //Change password
