@@ -34,3 +34,22 @@ exports.createTag = async (req,res) =>{
         });
     }
 }
+
+
+exports.showAllTags = async (req,res) =>{
+    try{
+        const allTags = await Tag.find({}, {name:true, description:true});
+
+        res.status(200).json({
+            success:true,
+            allTags,
+            message: "Tags fetched successfully",
+        })
+    }
+    catch(error){
+        res.status(500).json({
+            success: false,
+            message: "Error in fetching Tags",
+        });
+    }
+}
