@@ -1,5 +1,5 @@
 const Course = require("../models/Course");
-const Tag = require("../models/Tag");
+const Tag = require("../models/Category");
 const User = require("../models/User");
 const {uploadImageToCloudinary} = require("../utils/imageUploader");
 require("dotenv").config();
@@ -24,6 +24,7 @@ exports.createCourse = async (req,res) =>{
         const userId= req.user.id;
         const instructorDetails = await User.findById(userId);
         console.log("Instructor details:",instructorDetails);
+        //Verify that userId and instructorDetails._id are same or different (TODO)
 
         if(!instructorDetails){
             return res.status(400).json({

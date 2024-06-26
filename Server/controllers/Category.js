@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const Tag = require("../models/Tag");
+const Tag = require("../models/Category");
 
-exports.createTag = async (req,res) =>{
+exports.createCategory = async (req,res) =>{
     try{
         //fetch data
         const {name, description} = req.body;
@@ -15,41 +15,41 @@ exports.createTag = async (req,res) =>{
         }
 
         //create entry in DB
-        const tagDetails = await Tag.create({
+        const categoryDetails = await Tag.create({
             name:name,
             description:description,
         });
-        console.log(tagDetails);
+        console.log(categoryDetails);
 
         res.status(200).json({
             success:true,
             tagDetails,
-            message:"Tag created successfully",
+            message:"Category created successfully",
         });
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: "Error in creating Tag",
+            message: "Error in creating Category",
         });
     }
 }
 
 
-exports.showAllTags = async (req,res) =>{
+exports.showAllCategories = async (req,res) =>{
     try{
-        const allTags = await Tag.find({}, {name:true, description:true});
+        const allCategorys = await Tag.find({}, {name:true, description:true});
 
         res.status(200).json({
             success:true,
-            allTags,
-            message: "Tags fetched successfully",
+            allCategorys,
+            message: "Categories fetched successfully",
         })
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: "Error in fetching Tags",
+            message: "Error in fetching Category",
         });
     }
 }
