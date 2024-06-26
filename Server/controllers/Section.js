@@ -47,3 +47,34 @@ exports.createSection = async (req,res) =>{
         })
     }
 }
+
+exports.updateSection = async (res,req) =>{
+    try{
+        //data input
+        const {sectionName, sectionId} = req.body;
+
+        //data validation
+        if(!sectionName || !sectionId){
+            return res.status(500).json({
+                success:false,
+                message: "Missing properties"
+            });
+        }
+
+        //update data
+        const section = await Section.findByIdAndUpdate(sectionId, {sectionName}, {new:true});
+
+        //return res
+        return res.status(200).json({
+            success:true,
+            message:"Section updated successfully",
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Error in updating Section",
+            error: error.message,
+        })
+    }
+};
