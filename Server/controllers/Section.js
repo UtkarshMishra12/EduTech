@@ -85,6 +85,7 @@ exports.deleteSection = async (req,res) =>{
         const {sectionId} = req.body;
         //Find by id and delete
         await Section.findByIdAndDelete(sectionId);
+        //TODO-  Check do we need to delete the entry from the course sechema [TESTING]
         //send response
         res.status(200).json({
             success:true,
