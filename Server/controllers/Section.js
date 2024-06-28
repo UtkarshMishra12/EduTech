@@ -1,4 +1,4 @@
-const Scetion = require("../models/Section");
+const Section = require("../models/Section");
 const Course = require("../models/Course");
 
 
@@ -9,7 +9,7 @@ exports.createSection = async (req,res) =>{
 
         //data validation
         if(!sectionName || !courseId){
-            return res.status(500).json({
+            return res.status(400).json({
                 success:false,
                 message: "Missing properties"
             });
@@ -78,3 +78,24 @@ exports.updateSection = async (res,req) =>{
         })
     }
 };
+
+exports.deleteSection = async (req,res) =>{
+    try{
+        //get ID - assuming we are sending the section id in params
+        const {sectionId} = req.body;
+        //Find by id and delete
+        await Section.findByIdAndDelete(sectionId);
+        //send response
+        res.status(200).json({
+            success:true,
+            message: "Section Deleted",
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Error in Deleting Section",
+            error: error.message,
+        })
+    }
+}
