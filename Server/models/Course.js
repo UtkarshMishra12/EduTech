@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 const courseSchema = new mongoose.Schema({
-    name:{
+    courseName:{
         type:String,
         required:true,
         trim:true,
     },
-    description:{
+    courseDescription:{
         type:String,
         required:true,
         trim:true,
@@ -34,7 +34,8 @@ const courseSchema = new mongoose.Schema({
         type:String,
     },
     tag:{
-        type:String,
+        type:[String],
+        required: true,
     },
     category:{
         type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +46,13 @@ const courseSchema = new mongoose.Schema({
         ref: "User",
         required:true,
     }],
+    instructions: {
+		type: [String],
+	},
+	status: {
+		type: String,
+		enum: ["Draft", "Published"],
+	},
 });
 
 module.exports = mongoose.model("Course", courseSchema);

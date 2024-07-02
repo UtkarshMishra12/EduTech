@@ -29,6 +29,14 @@ const userSchema = new mongoose.Schema({
         enum: ["Admin", "Student", "Instructor"],
         required: true,
     },
+    active: {
+			type: Boolean,
+			default: true,
+	},
+	approved: {
+			type: Boolean,
+			default: true,
+	},
     additionalDetails:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Profile",
@@ -37,7 +45,7 @@ const userSchema = new mongoose.Schema({
     courses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Course",
-    }],
+    },],
     image:{
         type: String,
         required: true,
@@ -51,7 +59,10 @@ const userSchema = new mongoose.Schema({
     courseProgress: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "CourseProgress",
-    }],
-});
+    },
+   ],
+},
+{ timestamps: true }
+);
 
 module.exports = mongoose.model("User", userSchema);
