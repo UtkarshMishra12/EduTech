@@ -29,8 +29,14 @@ exports.createSection = async (req,res) =>{
                 }
             },
             {new:true}
-        );
-        //TODO: use populate to replace the section/sub-section both in the updatedCourseDetails
+        )
+        .populate({
+            path: "courseContent",
+            populate: {
+                path: "subSection",
+            },
+        })
+        .exec();
         
         //return res
         return res.status(200).json({
@@ -68,6 +74,7 @@ exports.updateSection = async (res,req) =>{
         return res.status(200).json({
             success:true,
             message:"Section updated successfully",
+            section,
         })
     }
     catch(error){
@@ -82,7 +89,7 @@ exports.updateSection = async (res,req) =>{
 exports.deleteSection = async (req,res) =>{
     try{
         //get ID - assuming we are sending the section id in params
-        const {sectionId} = req.body;
+        const {sectionId} = req.params;
         //Find by id and delete
         await Section.findByIdAndDelete(sectionId);
         //TODO-  Check do we need to delete the entry from the course sechema [TESTING]
