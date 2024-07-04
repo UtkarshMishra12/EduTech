@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Tag = require("../models/Category");
+const Category = require("../models/Category");
 
 exports.createCategory = async (req,res) =>{
     try{
@@ -15,13 +15,13 @@ exports.createCategory = async (req,res) =>{
         }
 
         //create entry in DB
-        const categoryDetails = await Tag.create({
+        const categoryDetails = await Category.create({
             name:name,
             description:description,
         });
         console.log(categoryDetails);
 
-        res.status(200).json({
+        return res.status(200).json({
             success:true,
             tagDetails,
             message:"Category created successfully",
@@ -38,7 +38,7 @@ exports.createCategory = async (req,res) =>{
 
 exports.showAllCategories = async (req,res) =>{
     try{
-        const allCategorys = await Tag.find({}, {name:true, description:true});
+        const allCategorys = await Category.find({}, {name:true, description:true});
 
         res.status(200).json({
             success:true,
