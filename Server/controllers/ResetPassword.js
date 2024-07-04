@@ -19,25 +19,29 @@ exports.resetPasswordToken =  async (req,res) =>{
      };
  
      //generate token
-     const token  = crypto.randomUUID();
+     const token  = crypto.randomBytes(20).toString("hex");
  
      //update user by adding expiration time
-     const updatedDetails = await User.findOneAndUpdate({email:email}, 
-                                                      {
-                                                         token:token,
-                                                         resetPasswordExpires: Date.now() + 5*60*1000,
-                                                      },
-                                                      {new:true},
+     const updatedDetails = await User.findOneAndUpdate(
+       { email: email },
+       {
+         token: token,
+         resetPasswordExpires: Date.now() + 3600000,
+       },
+       { new: true }
      );
+
+     console.log("DETAILS", updatedDetails);
      
      //create url
-     const url = `http://localhost:3000/update-passord/${token}`;
+     const url = `http://localhost:3000/update-password/${token}`;
  
      //send mail
-     await mailSender(email, 
-                       "Password reset Link", 
-                      `Password  Reset Link :  ${url}`
-                     );
+     await mailSender(
+       email,
+       "Password reset Link",
+       `Your Link for email verification is ${url}. Please click this url to reset your password.`
+     );
      //send response
      return res.status(200).json({
          success:true,
@@ -80,12 +84,12 @@ exports.resetPassword = async (req,res) => {
             })
         }
         //token time check
-        if(userDetails.resetPasswordExpires < Date.now()){
-            return res.json({
-                success: false,
-                message: "Token is expired, please regenrate your token",
-            })
-        }
+        if (!(userDetails.resetPasswordExpires > Date.now())) {
+			return res.status(403).json({
+				success: false,
+				message: `Token is Expired, Please Regenerate Your Token`,
+			});
+		}
 
         //hash password
         const hashedPassword= await bcrypt.hash(password, 10);
