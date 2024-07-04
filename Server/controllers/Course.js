@@ -1,28 +1,53 @@
 const Course = require("../models/Course");
-const Tag = require("../models/Category");
+const Category = require("../models/Category");
 const User = require("../models/User");
 const {uploadImageToCloudinary} = require("../utils/imageUploader");
 require("dotenv").config();
 
 exports.createCourse = async (req,res) =>{
     try{
+        //Get user ID from request object
+        const userId= req.user.id;
+
         //fetch data
-        const {courseName, courseDescription, whatYouWillLearn, price, tag} = req.body;
+        let {
+            courseName,
+			courseDescription,
+			whatYouWillLearn,
+			price,
+			tag,
+			category,
+			status,
+			instructions,
+        } = req.body;
 
         //get thumbnail
         const thumbnail = req.files.thumbnailImage;
 
         //validation
-        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !tag){
+        if(!courseName ||
+			!courseDescription ||
+			!whatYouWillLearn ||
+			!price ||
+			!tag ||
+			!thumbnail ||
+			!category){
             return res.status(400).json({
                 success:false,
                 message: "All fields are required",
             })
         }
 
-        //check for instructor
-        const userId= req.user.id;
-        const instructorDetails = await User.findById(userId);
+        if (!status || status === undefined) {
+			status = "Draft";
+		}
+
+        const instructorDetails = await User.findById(userId,
+            {
+                accountType: "Instructor",
+            }
+        );
+
         console.log("Instructor details:",instructorDetails);
         //Verify that userId and instructorDetails._id are same or different (TODO)
 
@@ -34,8 +59,8 @@ exports.createCourse = async (req,res) =>{
         }
 
         //check given tag is valid or not
-        const tagDetails = await Tag.findById(tag);
-        if(!tagDetails){
+        const categoryDetails = await Category.findById(category);
+        if(!categoryDetails ){
             return res.status(400).json({
                 success:false,
                 message: "Tag details not found",
@@ -45,15 +70,20 @@ exports.createCourse = async (req,res) =>{
         //Upload Image to cloudinary
         const thumbnailImage = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME);
 
+        console.log(thumbnailImage);
+
         //create an entry for new course
         const newCourse = new Course.create({
             courseName,
-            courseDescription,
-            instructor: instructorDetails._id,
-            whatYouWillLearn : whatYouWillLearn,
-            price,
-            tag: tagDetails._id, 
-            thumbnail: thumbnailImage.secure_url,
+			courseDescription,
+			instructor: instructorDetails._id,
+			whatYouWillLearn: whatYouWillLearn,
+			price,
+			tag: tag,
+			category: categoryDetails._id,
+			thumbnail: thumbnailImage.secure_url,
+			status: status,
+			instructions: instructions,
         })
 
         //add the ne course to the user schema of the instructor
@@ -68,7 +98,15 @@ exports.createCourse = async (req,res) =>{
         );
 
         //update the tag schema
-        
+        await Category.findByIdAndUpdate(
+			{ _id: category },
+			{
+				$push: {
+					course: newCourse._id,
+				},
+			},
+			{ new: true }
+		);
 
 
         //return response
@@ -88,15 +126,19 @@ exports.createCourse = async (req,res) =>{
 
 exports.showAllCourses = async (req,res) =>{
     try{
-        const allCourses = await Course.find({});
-        // {courseName:true,
-        //     price:true,
-        //     thumbnail:true,
-        //     instructor:true,
-        //     ratingAndReviews:true,
-        //     studentsEnrolled:true,})
-        //     .populate("instructor")
-        //     .execute();
+        const allCourses = await Course.find(
+			{},
+			{
+				courseName: true,
+				price: true,
+				thumbnail: true,
+				instructor: true,
+				ratingAndReviews: true,
+				studentsEnroled: true,
+			}
+		)
+            .populate("instructor")
+            .execute();
         
         return res.status(200).json({
             success:true,
