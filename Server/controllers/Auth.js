@@ -4,6 +4,9 @@ const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const mailSender = require("../utils/mailSender");
+const {passwordUpdated} = require("../mail/templates/passwordUpdate");
+const Profile = require("../models/Profile");
 
 
 //SendOTP
@@ -29,10 +32,13 @@ exports.sendOTP = async (req,res) =>{
             lowerCaseAlphabets: false,
             specialChars: false,
         });
-        console.log("OTP Generted", otp);
 
         //check unique otp or not
-        let result = await User.findOne({otp:otp});
+        const result = await OTP.findOne({otp:otp});
+
+        console.log("Result is Generate OTP Func");
+		console.log("OTP", otp);
+		console.log("Result", result);
 
         while(result){
             otp=  otpGenerator(6,{
@@ -107,17 +113,17 @@ exports.signUp = async (req,res) =>{
         }
 
         //find most recent OTP stored for the user
-        const recentOtp = await User.findOne({email}).sort({createdAt:-1}).limit(1);
-        console.log(recentOtp);
+        const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+		console.log(response);
 
         //validateOTP
-        if(recentOtp.length == 0){
+        if(response.length == 0){
             res.status(400).json({
                 success:false,
                 message:"OTP Not found",
             })
         }
-        else if(otp !== recentOtp.otp){
+        else if(otp !== response[0].otp){
             //Invalid OTP
             res.status(400).json({
                 success:false,
@@ -138,6 +144,11 @@ exports.signUp = async (req,res) =>{
             })
         }
 
+        // Create the user
+		let approved = "";
+		approved === "Instructor" ? (approved = false) : (approved = true);
+
+        // Create the Additional Profile For User
         const profileDetails = await Profile.create({
             gender:null,
             dateOfBirth:null,
@@ -151,8 +162,9 @@ exports.signUp = async (req,res) =>{
             lastName,
             password:hashedPassword,
             email,
-            accountType,
+            accountType: accountType,
             contactNumber,
+            approved: approved,
             additionalDetails: profileDetails._id,
             image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
         });
@@ -188,7 +200,8 @@ exports.login = async (req,res) => {
         }
 
         //check for existing user
-        const user = await User.findOne({email});
+        const user = await User.findOne({email}).populate("additionalDetails");
+
         if(!user){
             res.status(400).json({
                 success:false,
@@ -199,7 +212,7 @@ exports.login = async (req,res) => {
         const payload = {
             email:user.email,
             id:user._id,
-            accountType:user.accountType,
+            accountType:user.accountType, //role:user.role;
         }
         //match the password
         if( await bcrypt.compare(password, user.password)){
@@ -208,7 +221,7 @@ exports.login = async (req,res) => {
             let token = jwt.sign(payload, 
                 process.env.JWT_SECRET,
                 {
-                    expiresIn: "2h",
+                    expiresIn: "24h",
                 }
             );
 
@@ -247,17 +260,75 @@ exports.login = async (req,res) => {
 }
 
 
-//Change password
-exports.changePassword = async (req,res) =>{
-    try{
-        //fetch data
-       
-    }
-    catch(error){
-        console.log(error);
-        return res.status(500).json({
-            success:false,
-            message:'Error in changing the password',
-        });
-    }
-}
+// Controller for Changing Password
+exports.changePassword = async (req, res) => {
+	try {
+		// Get user data from req.user
+		const userDetails = await User.findById(req.user.id);
+
+		// Get old password, new password, and confirm new password from req.body
+		const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+		// Validate old password
+		const isPasswordMatch = await bcrypt.compare(
+			oldPassword,
+			userDetails.password
+		);
+		if (!isPasswordMatch) {
+			// If old password does not match, return a 401 (Unauthorized) error
+			return res
+				.status(401)
+				.json({ success: false, message: "The password is incorrect" });
+		}
+
+		// Match new password and confirm new password
+		if (newPassword !== confirmNewPassword) {
+			// If new password and confirm new password do not match, return a 400 (Bad Request) error
+			return res.status(400).json({
+				success: false,
+				message: "The password and confirm password does not match",
+			});
+		}
+
+		// Update password
+		const encryptedPassword = await bcrypt.hash(newPassword, 10);
+		const updatedUserDetails = await User.findByIdAndUpdate(
+			req.user.id,
+			{ password: encryptedPassword },
+			{ new: true }
+		);
+
+		// Send notification email
+		try {
+			const emailResponse = await mailSender(
+				updatedUserDetails.email,
+				passwordUpdated(
+					updatedUserDetails.email,
+					`Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
+				)
+			);
+			console.log("Email sent successfully:", emailResponse.response);
+		} catch (error) {
+			// If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
+			console.error("Error occurred while sending email:", error);
+			return res.status(500).json({
+				success: false,
+				message: "Error occurred while sending email",
+				error: error.message,
+			});
+		}
+
+		// Return success response
+		return res
+			.status(200)
+			.json({ success: true, message: "Password updated successfully" });
+	} catch (error) {
+		// If there's an error updating the password, log the error and return a 500 (Internal Server Error) error
+		console.error("Error occurred while updating password:", error);
+		return res.status(500).json({
+			success: false,
+			message: "Error occurred while updating password",
+			error: error.message,
+		});
+	}
+};
