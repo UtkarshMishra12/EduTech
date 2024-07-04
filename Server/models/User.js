@@ -42,10 +42,12 @@ const userSchema = new mongoose.Schema({
         ref: "Profile",
         required:true,
     },
-    courses: [{
+    courses: [
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref:"Course",
-    },],
+        },
+    ],
     image:{
         type: String,
         required: true,
@@ -56,7 +58,8 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpires:{
         type:Date,  
     },
-    courseProgress: [{
+    courseProgress: [
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref: "CourseProgress",
     },

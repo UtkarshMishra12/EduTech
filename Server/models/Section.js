@@ -4,11 +4,12 @@ const sectionSchema = new mongoose.Schema({
    sectionName:{
     type:String,
    },
-   subSection:[{
+   subSection:[
+      {
     type: mongoose.Schema.Types.ObjectId,
     ref: "SubSection",
     required:true,
-   },
+      },
    ],
 });
 
