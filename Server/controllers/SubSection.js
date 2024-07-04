@@ -33,12 +33,12 @@ exports.createSubSection = async (req,res) =>{
                 }
             },
             {new:true},
-        )
+        ).populate("subSection");
         //Lof updated section here after addinf populate uery
         //return response
         return res.status(200).json({
             success:true,
-            updatedSection,
+            data:updatedSection,
             message:"SubSection Created successfully",
         })
     }
