@@ -1,5 +1,6 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 exports.updateProfile = async (req,res) =>{
     try{
@@ -8,7 +9,7 @@ exports.updateProfile = async (req,res) =>{
         //get userId
         const id = req.user.id;
         //validation
-        if(!contactNumber || !gender || !Id){
+        if(!contactNumber || !gender || !id){
             return res.status(400).json({
                 success:false,
                 message:"All fields are required",
@@ -16,15 +17,13 @@ exports.updateProfile = async (req,res) =>{
         };
         //find profile
         const userDetails = await User.findById(id);
-        const profileId= userDetails.additionalDetails;
-        const profileDetails = await Profile.findById(profileId);
+		const profile = await Profile.findById(userDetails.additionalDetails);
         //update profile
-        profileDetails.dateOfBirth = dateOfBirth;
-        profileDetails.contactNumber = contactNumber;
-        profileDetails.about= about;
-        profileDetails.gender= gender;
+        profile.dateOfBirth = dateOfBirth;
+        profile.contactNumber = contactNumber;
+        profile.about= about;
 
-        await profileDetails.save();
+        await profile.save();
         //return reponse
         return res.status(200).json({
             success:true,
@@ -45,18 +44,18 @@ exports.deleteAccount = async (req,res) =>{
         //get id
         const id = req.user.id;
         //validate id
-        const userDetails = await User.findById(id);
+        const user = await User.findById({_id:id});
 
-        if(!userDetails){
+        if(!user){
             return res.status(500).json({
                 success:false,
                 message:"User does not exist",
             })
         };
 
-        const profileId = userDetails.additionalDetails;
+        // const profileId = userDetails.additionalDetails;
         //delete profile
-        await Profile.findByIdAndDelete(profileId); // (_id:userDetails.additionalDetails)
+        await Profile.findByIdAndDelete({_id:user.userDetails}); // (_id:userDetails.additionalDetails)
         //TODO : UnEnroll user from all the enrolled courses
         //delete user
         await User.findByIdAndDelete({_id:id});
