@@ -94,3 +94,92 @@ exports.capturePayment = async (req,res) =>{
     }
 }
 
+exports.verifySignature = async (req,res) =>{
+    const webhookSecret = "12345678";
+
+
+    const signature = req.headers["x-razorpay-signature"];
+
+    const shasum = crypto.createHmac("sha256", webhookSecret);
+    shasum.update(JSON.stringify(req.body));
+    const digest = shasum.digest("hex");
+
+    if(signature === digest){
+        console.log("Payment is Authorised");
+
+        const {courseId, userId} = req.body.payload.payment.entity.notes;
+
+        try{
+            //fullfill the action
+          
+            //find the course and enroll the student 
+            const enrolledCourse = await Course.findOneAndUpdate(
+                {_id: courseId},
+                {
+                    $push:{
+                        studentsEnrolled: userId,
+                    }
+                },
+                {new:true},
+            )
+
+            if(!enrolledCourse){
+                return res.status(500).json({
+                    success:false,
+                    message:"Course not found",
+                });
+            }
+
+            console.log(enrolledCourse);
+
+            //din the sutudent and add course to the lost of the enrolled courses
+            const enrolledStudent = await User.findOneAndUpdate(
+                {_id: userId},
+                {
+                    $push:{
+                        courses: courseId,
+                    }
+                },
+                {new:true},
+            );
+
+            console.log(enrolledStudent);
+
+            if(!enrolledStudent){
+                return res.status(500).json({
+                    success:false,
+                    message:"User not found",
+                });
+            }
+
+            //send confirmation email
+
+            const emailResponse = await mailSender(
+                enrolledStudent.email,
+                "Congratulation from Utkarsh",
+                "Congratulation you are enrolled in the course and start your journey",
+
+            )
+
+            console.log(emailResponse);
+            return res.status(200).json({
+                success:true,
+                message:"Signature verified",
+            });
+        }
+        catch(error){
+            return res.status(400).json({
+                success:fasle,
+                message:error.message,
+            });
+        }
+    }
+    else{
+        return res.status(400).json({
+            success:false,
+            message:"Signature  not verified",
+        })
+    }
+
+
+}
