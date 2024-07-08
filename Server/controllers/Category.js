@@ -101,7 +101,7 @@ exports.categoryPageDetails = async (req, res) => {
 		res.status(200).json({
 			selectedCourses: selectedCourses,
 			differentCourses: differentCourses,
-			mostSellingCourses: mostSellingCourses,
+			mostSellingCourses: mostSellingCourses, 
 		});
 	} catch (error) {
 		return res.status(500).json({
