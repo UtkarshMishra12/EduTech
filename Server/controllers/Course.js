@@ -25,7 +25,8 @@ exports.createCourse = async (req,res) =>{
         const thumbnail = req.files.thumbnailImage;
 
         //validation
-        if(!courseName ||
+        if(
+            !courseName ||
 			!courseDescription ||
 			!whatYouWillLearn ||
 			!price ||
@@ -63,7 +64,7 @@ exports.createCourse = async (req,res) =>{
         if(!categoryDetails ){
             return res.status(400).json({
                 success:false,
-                message: "Tag details not found",
+                message: "Category details not found",
             })
         }
 
@@ -73,7 +74,7 @@ exports.createCourse = async (req,res) =>{
         console.log(thumbnailImage);
 
         //create an entry for new course
-        const newCourse = new Course.create({
+        const newCourse = await Course.create({
             courseName,
 			courseDescription,
 			instructor: instructorDetails._id,
@@ -113,13 +114,15 @@ exports.createCourse = async (req,res) =>{
         return res.status(200).json({
             success:true,
             message: "Course created successfully",
-            data: newCourse,
+            newCourse,
         })
     }
     catch(error){
+        console.log(error);
         return res.status(400).json({
             success:false,
-            message: "All fields are required",
+            message: "Failed to Create Course",
+            error: error.message,
         })
     }
 }
