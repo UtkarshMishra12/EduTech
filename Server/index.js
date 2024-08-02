@@ -20,7 +20,7 @@ const fileUpload = require("express-fileupload");
 require("dotenv").config();
 
  
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 //middlewares
 app.use(express.json());
@@ -48,11 +48,8 @@ app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 
 
-app.get("/", (res,req) =>{
-    res.json({
-        success:true,
-        message:"Your server is up and running.....",
-    });
+app.get("/", (req,res) =>{
+    res.send(`<h1>Your app is running</h1>`);
 })
 
 app.listen(PORT, ()=>{

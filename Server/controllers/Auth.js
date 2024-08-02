@@ -84,32 +84,32 @@ exports.signUp = async (req,res) =>{
             confirmPassword,
             accountType,
             contactNumber,
-            otp
+            otp,
         }= req.body;
 
         //validation 
         if(!firstName || !lastName || !email || !password || !confirmPassword || !otp){
-            res.status(403).json({
+            return res.status(403).send({
                 success:false,
                 message: "Please fill the form correctly",
-            })
+            });
         }
 
         //check if both the password are same or not
         if(password !== confirmPassword){
-            res.status(500).json({
-                success:true,
+            return res.status(400).json({
+                success:false,
                 message: "Password does not match, please write correctly",
-            })
+            });
         }
 
         //check if user already present
         const existingUser= await User.findOne({email});
         if(existingUser){
-             res.status(400).json({
+            return res.status(400).json({
                  success:false,
                  message:"User already exist",
-            })
+            });
         }
 
         //find most recent OTP stored for the user
@@ -117,15 +117,15 @@ exports.signUp = async (req,res) =>{
 		console.log(response);
 
         //validateOTP
-        if(response.length == 0){
-            res.status(400).json({
+        if(response.length === 0){
+            return res.status(400).json({
                 success:false,
                 message:"OTP Not found",
-            })
+            });
         }
         else if(otp !== response[0].otp){
             //Invalid OTP
-            res.status(400).json({
+            return res.status(400).json({
                 success:false,
                 message:"Invalid OTP",
             })
@@ -133,20 +133,13 @@ exports.signUp = async (req,res) =>{
 
 
         //Hash Password
-        let hashedPassword;
-        try{
-            hashedPassword = await bcrypt.hash(password, 10);
-        }
-        catch(error){
-            res.status(404).json({
-                success:false,
-                message: "Error in hashing the password",
-            })
-        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log(hashedPassword);
 
         // Create the user
 		let approved = "";
 		approved === "Instructor" ? (approved = false) : (approved = true);
+        console.log(approved);
 
         // Create the Additional Profile For User
         const profileDetails = await Profile.create({
@@ -154,33 +147,35 @@ exports.signUp = async (req,res) =>{
             dateOfBirth:null,
             about:null,
             contactNumber:null,
-        })
+        });
+        console.log(profileDetails);
 
         //create entry in DB
-        const data = await User.create({
+        const user = await User.create({
             firstName,
             lastName,
-            password:hashedPassword,
             email,
-            accountType: accountType,
             contactNumber,
+            password: hashedPassword,
+            accountType: accountType,
             approved: approved,
             additionalDetails: profileDetails._id,
-            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}${lastName}`,
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             success:true,
             message: "User registered successfully",
             user,
-        })
+        });
 
     }
     catch(error){
-        res.status(500).json({
+        console.log(error);
+        return res.status(500).json({
             success:false,
-            message:"Error in signingUp and try again",
-        })
+            message:"User cannot be registered. Please try Again",
+        });
     }
 };
 
@@ -218,14 +213,14 @@ exports.login = async (req,res) => {
         if( await bcrypt.compare(password, user.password)){
             
             //generate jwt token after password matching
-            let token = jwt.sign(payload, 
+            const token = jwt.sign(payload, 
                 process.env.JWT_SECRET,
                 {
                     expiresIn: "24h",
                 }
             );
 
-            user = user.toObject();
+            //user = user.toObject();
             user.token = token;
             user.password = undefined;
 
