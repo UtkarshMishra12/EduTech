@@ -7,8 +7,8 @@ exports.createCategory = async (req,res) =>{
         const {name, description} = req.body;
 
         //validation
-        if(!name || !description){
-            res.status(400).json({
+        if(!name){
+            return res.status(400).json({
                 success: false,
                 message:" Please fill the Name and Description correctly",
             })
@@ -23,17 +23,18 @@ exports.createCategory = async (req,res) =>{
 
         return res.status(200).json({
             success:true,
-            tagDetails,
+            categoryDetails,
             message:"Category created successfully",
         });
     }
     catch(error){
+		console.log(error);
         res.status(500).json({
             success: false,
             message: "Error in creating Category",
         });
     }
-}
+};
 
 
 exports.showAllCategories = async (req,res) =>{
