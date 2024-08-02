@@ -22,12 +22,14 @@ exports.updateProfile = async (req,res) =>{
         profile.dateOfBirth = dateOfBirth;
         profile.contactNumber = contactNumber;
         profile.about= about;
+        profile.gender= gender;
 
         await profile.save();
         //return reponse
         return res.status(200).json({
             success:true,
             message:"Profile updated successfully",
+            profile,
         });
     }
     catch(error){

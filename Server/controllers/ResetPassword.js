@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 //ResetPasswordToken
 exports.resetPasswordToken =  async (req,res) =>{
@@ -50,7 +51,7 @@ exports.resetPasswordToken =  async (req,res) =>{
 
    }
    catch(error){
-    console.log(erros.message);
+    console.log(error.message);
     res.status(500).json({
         success:false,
         message: "Error in generating the resetPassword token",
@@ -107,7 +108,7 @@ exports.resetPassword = async (req,res) => {
 
     }
     catch(error){
-        console.log(erros.message);
+        console.log(error.message);
         res.status(500).json({
         success:false,
         message: "Error in resetting the Password",
