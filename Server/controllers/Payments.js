@@ -169,7 +169,7 @@ exports.verifySignature = async (req,res) =>{
         }
         catch(error){
             return res.status(400).json({
-                success:fasle,
+                success:false,
                 message:error.message,
             });
         }
