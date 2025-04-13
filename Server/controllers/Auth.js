@@ -198,9 +198,9 @@ exports.login = async (req,res) => {
         const user = await User.findOne({email}).populate("additionalDetails");
 
         if(!user){
-            res.status(400).json({
+            res.status(401).json({
                 success:false,
-                message:"User already exist",
+                message:"User is not Registered with Us Please SignUp to Continue",
             })
         }
 

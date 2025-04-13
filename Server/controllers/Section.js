@@ -54,7 +54,7 @@ exports.createSection = async (req,res) =>{
     }
 }
 
-exports.updateSection = async (res,req) =>{
+exports.updateSection = async (req,res) =>{
     try{
         //data input
         const {sectionName, sectionId} = req.body;
@@ -78,11 +78,11 @@ exports.updateSection = async (res,req) =>{
         })
     }
     catch(error){
-        return res.status(500).json({
+      return  res.status(401).json({
             success:false,
             message:"Error in updating Section",
             error: error.message,
-        })
+        });
     }
 };
 
@@ -90,7 +90,7 @@ exports.deleteSection = async (req,res) =>{
     try{
         //get ID - assuming we are sending the section id in params
         //ToDo-> req.params -? Test
-        const {sectionId} = req.params;
+        const {sectionId} = req.body;
         //Find by id and delete
         await Section.findByIdAndDelete(sectionId);
         //TODO-  Check do we need to delete the entry from the course sechema [TESTING]
