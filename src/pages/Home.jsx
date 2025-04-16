@@ -8,6 +8,7 @@ import TimelineSection from "../components/core/HomePage/TimelineSection";
 import LearningLanguageSection from "../components/core/HomePage/LearningLanguageSection";
 import InstructorSection from "../components/core/HomePage/InstructionSection";
 import Footer from "../components/Common/Footer";
+import ExploreMore from "../components/core/HomePage/ExploreMore";
 
 function Home() {
   return (
@@ -122,10 +123,13 @@ function Home() {
             backgroundGradient={<div className="codeblock1 absolute"></div>}
           />
         </div>
+ 
+        <ExploreMore/>
+
       </div>
 
       {/* Section02 */}
-      <div className="bg-pure-greys-5 text-richblack-700">
+      <div className="bg-pure-greys-5 text-richblack-700 mt-10">
         <div className="homepage_bg h-[310px] mx-auto">
           <div className="w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-5">
             <div className="h-[150px]"></div>
