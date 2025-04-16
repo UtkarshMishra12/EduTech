@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import HighlightText from "../components/core/HomePage/HighlightText";
@@ -7,6 +6,7 @@ import Banner from "../assets/Images/banner.mp4";
 import CodeBlocks from "../components/core/HomePage/CodeBlocks";
 import TimelineSection from "../components/core/HomePage/TimelineSection";
 import LearningLanguageSection from "../components/core/HomePage/LearningLanguageSection";
+import InstructorSection from "../components/core/HomePage/InstructionSection";
 
 function Home() {
   return (
@@ -175,6 +175,14 @@ function Home() {
       </div>
 
       {/* Section03 */}
+      <div className="w-11/12 mx-auto max-w-maxContent flex flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white">
+           <InstructorSection/> 
+
+           <h2 className="text-center text-4xl font-semibold mt-10">
+            Reviews from other learners
+           </h2>
+           {/* Slider section */}
+      </div>
 
       {/* Section04 */}
     </div>

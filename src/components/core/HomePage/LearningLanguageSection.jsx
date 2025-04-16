@@ -6,7 +6,7 @@ import planYourLesson from "../../../assets/Images/Plan_your_lessons.png" ;
 import CTAbtn from "../HomePage/Button";
 function LearningLanguageSection() {
     return (
-      <div className="mt-[130px]">
+      <div className="mt-[130px] mb-32">
         <div className="flex flex-col items-center gap-5">
           <div className="text-4xl font-semibold text-center">
             Your Swiss knife for
