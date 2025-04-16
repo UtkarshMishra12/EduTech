@@ -7,6 +7,7 @@ import CodeBlocks from "../components/core/HomePage/CodeBlocks";
 import TimelineSection from "../components/core/HomePage/TimelineSection";
 import LearningLanguageSection from "../components/core/HomePage/LearningLanguageSection";
 import InstructorSection from "../components/core/HomePage/InstructionSection";
+import Footer from "../components/Common/Footer";
 
 function Home() {
   return (
@@ -185,6 +186,7 @@ function Home() {
       </div>
 
       {/* Section04 */}
+      <Footer/>
     </div>
   );
 }
