@@ -34,9 +34,9 @@ function TimelineSection() {
   return (
     <div>
        
-       <div className="flex flex-row gap-15 items-center">
+       <div className="flex gap-3 flex-col md:flex-row gap-15 items-center">
           
-          <div className="flex flex-col gap-5 w-[45%]">
+          <div className="w-full md:w-[45%] flex flex-col gap-5">
             {
                 timeLine.map( (element,index) =>{
                    return (
@@ -61,16 +61,15 @@ function TimelineSection() {
              <img src={timelineImage} alt="timeline" 
              className="shadow-white object-cover h-fit"/>
 
-             <div className="absolute bg-caribbeangreen-700 text-white uppercase flex flex-row py-7 
-               left-[50%] translate-x-[-50%] translate-y-[-50%]">
-                <div className="flex flex-row items-center gap-5 border-r border-caribbeangreen-300 px-7">
-                   <p className="text-3xl font-bold">10</p>
-                   <p className="text-caribeangreen-300 text-sm">Years of Experience</p>
+             <div className="absolute bg-caribbeangreen-700 text-white uppercase flex flex-row py-7 px-7      md:py-10  md:px-10 left-[50%] translate-x-[-50%] translate-y-[-50%]">
+                <div className="flex flex-row items-center gap-5 md:gap-5 border-r border-caribbeangreen-300 pr-2 md:pr-5">
+                   <p className="text-xl md:text-3xl font-bold">10</p>
+                   <p className="text-caribeangreen-300 text-sm md:font-sm">Years of Experience</p>
                 </div>
 
-                <div className="flex flex-row gap-5 items-center px-7">
-                <p className="text-3xl font-bold">250</p>
-                <p className="text-caribeangreen-300 text-sm">Types of Course</p>
+                <div className="flex flex-row md:gap-5  gap-5 items-center px-7 md:px-7">
+                <p className="text-xl md:text-3xl font-bold">250</p>
+                <p className="text-caribeangreen-300 text-sm md:font-sm">Types of Course</p>
                 </div>
              </div>
 
