@@ -131,9 +131,9 @@ function Home() {
       {/* Section02 */}
       <div className="bg-pure-greys-5 text-richblack-700 mt-10">
         <div className="homepage_bg h-[310px] mx-auto">
-          <div className="w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-5">
+          <div className="w-11/12 max-w-maxContent flex flex-col mx-auto gap-7">
             <div className="h-[150px]"></div>
-            <div className="flex flex-row gap-7 text-white mx-auto">
+            <div className="flex flex-row gap-7 text-white mx-auto ">
               <CTAButton active={true} linkto={"/signup"}>
                 <div className="flex items-center gap-3">
                   Explore Full Catalog
@@ -142,7 +142,7 @@ function Home() {
               </CTAButton>
 
               <CTAButton active={false} linkto={"/signup"}>
-                <div className="flex items-center gap-3">Learn More</div>
+                <div>Learn More</div>
               </CTAButton>
             </div>
           </div>
