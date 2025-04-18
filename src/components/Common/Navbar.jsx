@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Route, matchPath } from "react-router-dom";
 import logo from "../../assets/Logo/Logo-Full-Light.png";
 import {NavbarLinks} from "../../data/navbar-links";
@@ -6,6 +6,20 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import ProfileDropDown from "../core/Auth/ProfileDropDown";
+import { apiConnector } from "../../services/apiconnector";
+import { categories } from "../../services/apis";
+import { IoIosArrowDropdownCircle } from "react-icons/io";
+
+const subLinks = [
+    {
+        title: "Python",
+        link:"/catalog/python"
+    },
+    {
+        title:"Web Development",
+        link:"/catalog/web-development"
+    }
+]
 
 function Navbar(){
 
@@ -15,6 +29,24 @@ function Navbar(){
     
     
     const location = useLocation();
+
+    //const [subLinks, setSubLinks]= useState([]);
+
+    // const fetchSubLinks = async () => {
+    //     try {
+    //       const result = await apiConnector("GET", categories.CATEGORIES_API);
+    //       console.log("💚 printing res=>", result);
+    //       setSubLinks(result.data.data);
+    //     } catch (error) {
+    //       console.log("error- cannot fetch categoires list =>", error);
+    //     }
+    //   };
+    
+    //   useEffect(() => {
+    //     fetchSubLinks();
+    //   }, []);
+    
+
     const matchRoute = (route) =>{
         return matchPath({path:route}, location.pathname);
     }
@@ -34,8 +66,30 @@ function Navbar(){
                                 {
                                     link.title === "Catalog" ? 
                                     (
-                                        <div>
+                                        <div className="relative flex items-center gap-x-2 cursor-pointer group">
+                                            <p>{link.title}</p>
+                                            <IoIosArrowDropdownCircle/>
 
+                                            <div className="invisible absolute left-[50%] top-[50%] flex flex-col
+                                            rounded-md bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 lg:w-[300px] translate-x-[-50%] translate-y-[80%]">
+
+                                            <div className="absolute left-[50%] top-0 h-6 w-6 rotate-45 rounded bg-richblack-5 translate-x-[80%] translate-y-[-45%] ">
+                                            </div>
+
+                                            {
+                                                subLinks.length ? 
+                                                (
+                                                    subLinks.map( (subLink, index) =>(
+                                                        <Link to={`${subLink.link}`} key={index}>
+                                                           <p>{subLink.title}</p>
+                                                        </Link>
+                                                    ))
+                                                ) 
+                                                : 
+                                                (<div></div>)
+                                            }
+
+                                            </div>
                                         </div>
                                     ) 
                                     : 
