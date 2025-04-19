@@ -10,7 +10,7 @@ const Profile = require("../models/Profile");
 
 
 //SendOTP
-exports.sendOTP = async (req,res) =>{
+exports.sendotp = async (req,res) =>{
     try{
         //fetch email from the body
         const {email} = req.body;
@@ -73,7 +73,7 @@ exports.sendOTP = async (req,res) =>{
 
 
 //Signup
-exports.signUp = async (req,res) =>{
+exports.signup = async (req,res) =>{
     try{
         //fetch data
         const {
