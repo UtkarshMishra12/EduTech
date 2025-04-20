@@ -6,6 +6,7 @@ import BannerImage3 from "../assets/Images/aboutus3.webp" ;
 import Quote from '../components/core/AboutPage/Quote';
 import FoundingStory from "../assets/Images/FoundingStory.png";
 import StatsComponent from '../components/core/AboutPage/StatsComponent';
+import LearningGrid from '../components/core/AboutPage/LearningGrid';
 
 function About(){
     return(
@@ -86,6 +87,9 @@ function About(){
 
             
             {/* section 5 */}
+            <section>
+                <LearningGrid/>
+            </section>
 
 
         </div>
