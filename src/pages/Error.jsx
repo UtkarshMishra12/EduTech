@@ -1,9 +1,11 @@
 import React from "react";
+import Footer from "../components/Common/Footer";
 
 const Error = () =>{
 
     return(
-        <div className="flex item-center mx-auto scale-50 w-[100vw] mt-20 justify-center text-5xl text-yellow-100">
+		<>
+        <div className=" flex item-center mx-auto scale-50 w-[100vw] mt-20 justify-center text-5xl text-yellow-100 font-bold">
             <figure>
 	
 	<figcaption className="w-[100%]">
@@ -27,6 +29,10 @@ const Error = () =>{
 	</figcaption>
 </figure>
         </div>
+		<div className="mt-80">
+		 <Footer/>
+		</div>
+		</>
     )
 }
 
