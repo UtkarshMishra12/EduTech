@@ -5,6 +5,7 @@ import BannerImage2 from "../assets/Images/aboutus2.webp" ;
 import BannerImage3 from "../assets/Images/aboutus3.webp" ;
 import Quote from '../components/core/AboutPage/Quote';
 import FoundingStory from "../assets/Images/FoundingStory.png";
+import StatsComponent from '../components/core/AboutPage/StatsComponent';
 
 function About(){
     return(
@@ -32,7 +33,7 @@ function About(){
 
             {/* section 2 */}
             <section >
-                <div className="text-4xl border-b-[1px] mb-3 text-center font-semibold py-7">
+                <div className="text-4xl  border-b-[0.5px] mb-10 mt-8 text-center font-semibold py-7">
                     <Quote />
                 </div>
             </section>
@@ -42,7 +43,7 @@ function About(){
                 <div className="flex w-full items-center justify-center flex-col mt-14 gap-y-8 py-10">
 
                     {/* founding story upper  box */}
-                    <div className="flex md:flex-row flex-col gap-y-5 item-center justify-center gap-x-5 ">
+                    <div className="flex md:flex-row flex-col gap-y-5 item-center justify-center gap-x-5 mb-4 ">
                     
                         {/* left box founding story */}
                         <div className="md:w-[50%] w-full mx-auto flex flex-col gap-y-5">
@@ -59,11 +60,11 @@ function About(){
                     </div>
 
                     {/* vision and mission */}
-                    <div className="flex flex-col md:flex-row gap-x-10 gap-y-5 mt-10">
+                    <div className="flex flex-col md:flex-row gap-x-10 gap-y-5 mt-10 justify-center items-center ">
 
                         {/* left box - our vision */}
-                        <div className="flex flex-col gap-y-4">
-                            <p className="text-3xl"><HighlightText text={"Our Vision"} /></p>
+                        <div className="flex flex-col gap-y-4 mt-4">
+                            <p className="text-3xl"><span className="text-brown-200 font-bold">Our Vision</span></p>
                             <p className="text-[15px] text-richblack-100">With this vision in mind, we set out on a journey to create an e-learning platform that would revolutionize the way people learn. Our team of dedicated experts worked tirelessly to develop a robust and intuitive platform that combines cutting-edge technology with engaging content, fostering a dynamic and interactive learning experience.</p>
                         </div>
 
@@ -81,7 +82,11 @@ function About(){
             </section>
 
             {/* section 4 */}
+            <StatsComponent/>
+
             
+            {/* section 5 */}
+
 
         </div>
         </>
