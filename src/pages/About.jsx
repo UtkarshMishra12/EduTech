@@ -7,21 +7,22 @@ import Quote from '../components/core/AboutPage/Quote';
 import FoundingStory from "../assets/Images/FoundingStory.png";
 import StatsComponent from '../components/core/AboutPage/StatsComponent';
 import LearningGrid from '../components/core/AboutPage/LearningGrid';
+import ContactFormSection from '../components/core/AboutPage/ContactFormSection';
+import Footer from '../components/Common/Footer';
 
 function About(){
     return(
-        <>
-        <div className="mt-[50px] w-11/12 max-w-maxContent mx-auto text-white">
+        <div className="mt-[50px] mx-auto text-white">
           
            {/* Section 1 */}
            <section>
-                <div className="">
+                <div className="w-11/12 max-w-maxContent">
                     <header className="text-center text-4xl w-[70%] mx-auto font-bold">
                         Driving Innovation in Online Education for a <HighlightText text={"Brighter Future"} />
                     </header>
                     <p className="text-lg text-center w-[70%] mx-auto mt-3 text-richblack-200">Studynotion is at the forefront of driving innovation in online education. We're passionate about creating a brighter future by offering cutting-edge courses, leveraging emerging technologies, and nurturing a vibrant learning community.</p>
 
-                    <div className="flex flex-col w-[50%] md:w-full  md:flex-row mt-14 gap-6 mx-auto">
+                    <div className="flex flex-col w-11/12 max-w-maxContent md:w-full ml-14 justify-center items-center   md:flex-row mt-14 gap-6 mx-auto">
                         <img src={BannerImage1} alt="Banner1" />
                         <img src={BannerImage2} alt="Banner2" />
                         <img src={BannerImage3} alt="Banner3" />
@@ -33,7 +34,7 @@ function About(){
            </section>
 
             {/* section 2 */}
-            <section >
+            <section className="w-11/12 max-w-maxContent mx-auto mt-10">
                 <div className="text-4xl  border-b-[0.5px] mb-10 mt-8 text-center font-semibold py-7">
                     <Quote />
                 </div>
@@ -41,10 +42,10 @@ function About(){
 
             {/* section 3 */}
             <section>
-                <div className="flex w-full items-center justify-center flex-col mt-14 gap-y-8 py-10">
+                <div className="flex items-center justify-center flex-col mt-14 gap-y-8 py-10">
 
                     {/* founding story upper  box */}
-                    <div className="flex md:flex-row flex-col gap-y-5 item-center justify-center gap-x-5 mb-4 ">
+                    <div className="flex md:flex-row flex-col gap-y-5 w-11/12 max-w-maxContent item-center justify-center gap-x-5 mb-4 ">
                     
                         {/* left box founding story */}
                         <div className="md:w-[50%] w-full mx-auto flex flex-col gap-y-5">
@@ -54,14 +55,14 @@ function About(){
                         </div>
 
                         {/* founding story right box */}
-                        <div className="md:w-[50%] mx-auto w-full my-auto">
+                        <div className="md:w-[50%] mx-auto w-full ml-10 my-auto">
                             <img src={FoundingStory} alt="" />
                         </div>
 
                     </div>
 
                     {/* vision and mission */}
-                    <div className="flex flex-col md:flex-row gap-x-10 gap-y-5 mt-10 justify-center items-center ">
+                    <div className="flex flex-col w-11/12 max-w-maxContent md:flex-row gap-x-10 gap-y-5 mt-10 justify-center items-center ">
 
                         {/* left box - our vision */}
                         <div className="flex flex-col gap-y-4 mt-4">
@@ -83,17 +84,28 @@ function About(){
             </section>
 
             {/* section 4 */}
-            <StatsComponent/>
+            <div>
+                <StatsComponent/>
+            </div>
 
             
             {/* section 5 */}
-            <section>
+            <section className="mx-auto flex flex-col items-center justify-center">
                 <LearningGrid/>
+                <ContactFormSection/>
             </section>
 
+            {/* section 6 */}
+            <section>
+                <div>
+                    Reviews from our learners
+                </div>
+            </section>
+
+            {/* section 7 */}
+            <Footer/>
 
         </div>
-        </>
     )
 }
 
