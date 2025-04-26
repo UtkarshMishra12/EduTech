@@ -30,21 +30,23 @@ function Navbar(){
     
     const location = useLocation();
 
-    //const [subLinks, setSubLinks]= useState([]);
+    const [ssubLinks, setSsubLinks]  = useState([]);
 
-    // const fetchSubLinks = async () => {
-    //     try {
-    //       const result = await apiConnector("GET", categories.CATEGORIES_API);
-    //       console.log("💚 printing res=>", result);
-    //       setSubLinks(result.data.data);
-    //     } catch (error) {
-    //       console.log("error- cannot fetch categoires list =>", error);
-    //     }
-    //   };
-    
-    //   useEffect(() => {
-    //     fetchSubLinks();
-    //   }, []);
+    const fetchSublinks = async() => {
+        try{
+            const result = await apiConnector("GET", categories.CATEGORIES_API);
+            console.log("Printing Sublinks result:" , result);
+            setSsubLinks(result.data.data);
+        }
+        catch(error) {
+            console.log("Could not fetch the category list");
+        }
+    }
+
+
+    useEffect( () => {
+        fetchSublinks();
+    },[] )
     
 
     const matchRoute = (route) =>{
