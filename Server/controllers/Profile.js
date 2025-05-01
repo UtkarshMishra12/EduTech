@@ -2,45 +2,106 @@ const Profile = require("../models/Profile");
 const User = require("../models/User");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
-exports.updateProfile = async (req,res) =>{
-    try{
-        //get data
-        const {dateOfBirth="",about="", contactNumber, gender } = req.body;
-        //get userId
-        const id = req.user.id;
-        //validation
-        if(!contactNumber || !gender || !id){
-            return res.status(400).json({
-                success:false,
-                message:"All fields are required",
-            })
-        };
-        //find profile
-        const userDetails = await User.findById(id);
-		const profile = await Profile.findById(userDetails.additionalDetails);
-        //update profile
-        profile.dateOfBirth = dateOfBirth;
-        profile.contactNumber = contactNumber;
-        profile.about= about;
-        profile.gender= gender;
+// exports.updateProfile = async (req,res) =>{
+//     try{
+//         //get data
+//         const {dateOfBirth="",about="", contactNumber} = req.body;
+//         //get userId
+//         const id = req.user.id;
+//         //validation
+//         if(!contactNumber || !id){
+//             return res.status(400).json({
+//                 success:false,
+//                 message:"All fields are required",
+//             })
+//         };
+//         //find profile
+//         const userDetails = await User.findById(id);
+// 		const profile = await Profile.findById(userDetails.additionalDetails);
+//         //update profile
+//         profile.dateOfBirth = dateOfBirth;
+//         profile.contactNumber = contactNumber;
+//         profile.about= about;
+//         // profile.gender= gender;
 
-        await profile.save();
-        //return reponse
-        return res.status(200).json({
-            success:true,
-            message:"Profile updated successfully",
-            profile,
-        });
-    }
-    catch(error){
-        return res.status(400).json({
-            success:false,
-            message:"Error in updating Profile",
-        })
-    }
-};
+//         await profile.save();
+//         //return reponse
+//         return res.status(200).json({
+//             success:true,
+//             message:"Profile updated successfully",
+//             profile,
+//         });
+//     }
+//     catch(error){
+//         return res.status(400).json({
+//             success:false,
+//             message:"Error in updating Profile",
+//         })
+//     }
+// };
 
 //delete account
+
+exports.updateProfile = async (req, res) => {
+	try {
+		const { dateOfBirth , about, contactNumber } = req.body;
+		const id = req.user.id;
+
+		console.log("dob--" , dateOfBirth , about, contactNumber );
+		console.log("req.body", req.body);
+
+		const {firstName, lastName} = req.body;
+
+		// Find the profile by id
+		// const userDetails = await User.findById(id);
+		// const profile = await Profile.findById(userDetails.additionalDetails);
+
+
+
+		// // Update the profile fields
+		// profile.dateOfBirth = dateOfBirth;
+		// profile.about = about;
+		// profile.contactNumber = contactNumber;
+
+		// // Save the updated profile
+		// await profile.save();
+
+		const profile = await User.findByIdAndUpdate(
+			{_id: id} ,
+			{firstName, lastName},
+			{new: true}
+		).populate("additionalDetails").lean();
+
+		const additionalDetails = await Profile.findByIdAndUpdate(
+			{_id : profile.additionalDetails._id},
+			{ dateOfBirth , about, contactNumber },
+			{new: true}
+		);
+
+		const updatedUserDetails = await User.findOne(
+			{_id : id}
+		).populate("additionalDetails").lean();
+
+		return res.json({
+			success: true,
+			message: "Profile updated successfully",
+			profile,
+			updatedUserDetails,
+			additionalDetails,
+		});
+
+
+
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			success: false,
+			error: error.message,
+		});
+	}
+};
+
+
 exports.deleteAccount = async (req,res) =>{
     try{
         //get id
