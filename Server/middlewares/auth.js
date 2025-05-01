@@ -6,11 +6,15 @@ const User = require("../models/User");
 exports.auth = async (req,res,next) =>{
     try{
         //fetch token
-        const token = req.cookies.token || req.body.token || req.header("Authorisation").replace("Bearer", "");
+        console.log("BEFORE ToKEN EXTRACTION");
+        //extract token
+        const token = req.cookies.token 
+                        || req.body.token 
+                        || req.header("Authorisation").replace("Bearer ", "");
+        console.log("AFTER ToKEN EXTRACTION");
 
         if(!token || token === undefined){
-            console.log(error);
-            return res.status(500).json({
+            return res.status(401).json({
             success:false,
             message:'Token Missing',
             });
