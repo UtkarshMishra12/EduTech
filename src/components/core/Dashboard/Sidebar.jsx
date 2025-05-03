@@ -32,7 +32,7 @@ const Sidebar = () => {
 
         return(
             <div>
-                <span className="loader"></span>
+                <span className="spinner"></span>
             </div>
         )
     }
