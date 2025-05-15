@@ -188,7 +188,7 @@ exports.login = async (req,res) => {
 
         //validation
         if(!email || !password){
-            res.status(403).json({
+           return res.status(403).json({
                 success:false,
                 message: "Please fill the email and password correctly",
             });
@@ -198,7 +198,7 @@ exports.login = async (req,res) => {
         const user = await User.findOne({email}).populate("additionalDetails");
 
         if(!user){
-            res.status(401).json({
+            return res.status(401).json({
                 success:false,
                 message:"User is not Registered with Us Please SignUp to Continue",
             })

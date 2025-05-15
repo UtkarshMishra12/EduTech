@@ -69,14 +69,15 @@ export const fetchCourseDetails = async (courseId) => {
 
 // fetching the available course categories
 export const fetchCourseCategories = async () => {
-  let result = []
+  let result = [];
   try {
     const response = await apiConnector("GET", COURSE_CATEGORIES_API)
     console.log("COURSE_CATEGORIES_API API RESPONSE............", response)
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch Course Categories")
     }
-    result = response?.data?.data
+    result = response.data;
+    console.log("result", result)
   } catch (error) {
     console.log("COURSE_CATEGORY_API API ERROR............", error)
     toast.error(error.message)
@@ -98,7 +99,7 @@ export const addCourseDetails = async (data, token) => {
       throw new Error("Could Not Add Course Details")
     }
     toast.success("Course Details Added Successfully")
-    result = response?.data?.data
+    result = response?.data;
   } catch (error) {
     console.log("CREATE COURSE API ERROR............", error)
     toast.error(error.message)
